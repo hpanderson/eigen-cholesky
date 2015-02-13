@@ -14,7 +14,7 @@ message(STATUS "OpenBLAS lib: ${OPENBLAS_LIBRARIES}")
 
 set(BOOST_MIN_VERSION "1.53.0")
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS chrono REQUIRED)
+find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS chrono system REQUIRED)
 message(STATUS "Boost lib dir: ${Boost_LIBRARY_DIR}")
 message(STATUS "Boost include dir: ${Boost_INCLUDE_DIR}")
 
@@ -26,8 +26,10 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
   message(WARN "Building in DEBUG mode will not produce representative results.")
 endif ()
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
+
 link_directories(${Boost_LIBRARY_DIR})
 include_directories(SYSTEM ${Boost_INCLUDE_DIR} ${ARMADILLO_INCLUDE_DIRS} ${OPENBLAS_INCLUDE_DIRS} ${EIGEN_INCLUDE_DIRS})
 
 add_executable(eigen-chol eigen-chol.cpp)
-target_link_libraries(eigen-chol ${Boost_LIBRARIES} ${ARMADILLO_LIBRARIES} ${OPENBLAS_LIBRARIES})
+target_link_libraries(eigen-chol ${Boost_LIBRARIES} ${ARMADILLO_LIBRARIES} ${OPENBLAS_LIBRARIES} gfortran pthread)
