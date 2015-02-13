@@ -1,5 +1,5 @@
 #include <iostream>
-#include <boost/chrono.hpp> // could use std::chrono except VS2012 typedefs high_resolution_clock to system_clock (really)
+#include <chrono>
 
 #ifdef _MSC_VER
 	#pragma warning(disable:4714) // force_inline warning from eigen, could probably disable this one globally
@@ -73,8 +73,8 @@ void MatrixTimingFixture::DestroyMembers()
 
 void MatrixTimingFixture::TimeOp(int inIterations, size_t inMatrixSize, std::string inDescription, MatrixTimingFixture::ImpType inType, std::function<void ()> inOperation)
 {
-	using boost::chrono::high_resolution_clock;
-	using boost::chrono::nanoseconds;
+	using namespace std;
+	using namespace chrono;
 
 	nanoseconds totalTime;
 	for (int i = 0; i < inIterations; ++i)
@@ -82,7 +82,7 @@ void MatrixTimingFixture::TimeOp(int inIterations, size_t inMatrixSize, std::str
 		// fill with random values each iteration
 		RandomizeMembers(inMatrixSize, inType);
 
-		high_resolution_clock::time_point start = high_resolution_clock::now();
+		auto start = high_resolution_clock::now();
 		inOperation();
 		totalTime += high_resolution_clock::now() - start;
 
