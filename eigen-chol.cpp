@@ -97,7 +97,7 @@ void MatrixTimingFixture::TimeOp(int inIterations, size_t inMatrixSize, std::str
 void MatrixTimingFixture::TimeMatrixSizes()
 {
 	int iterations = 10;
-	int maxPow = 7;
+	int maxPow = 10;
 	// go through various matrix sizes and time several BLAS/LAPACK functions
 	for (int b = 1; b <= maxPow; ++b)
 	{

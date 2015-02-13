@@ -9,6 +9,9 @@ set(ARMADILLO_LIBRARIES "$ENV{ARMADILLO_ROOT}/lib/armadillo.dll.a")
 message(STATUS "Armadillo include dir: ${ARMADILLO_INCLUDE_DIRS}")
 message(STATUS "Armadillo lib: ${ARMADILLO_LIBRARIES}")
 
+set(OPENBLAS_LIBRARIES $ENV{OPENBLAS_ROOT}/lib/libopenblas.dll.a)
+message(STATUS "OpenBLAS lib: ${OPENBLAS_LIBRARIES}")
+
 set(BOOST_MIN_VERSION "1.53.0")
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS chrono REQUIRED)
