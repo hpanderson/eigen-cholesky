@@ -7,8 +7,11 @@ project(EIGEN_CHOL)
 set(ARMADILLO_INCLUDE_DIRS "$ENV{ARMADILLO_ROOT}/include")
 message(STATUS "Armadillo include dir: ${ARMADILLO_INCLUDE_DIRS}")
 
-set(OPENBLAS_LIBRARIES $ENV{OPENBLAS_ROOT}/lib/libopenblas.dll.a)
-message(STATUS "OpenBLAS lib: ${OPENBLAS_LIBRARIES}")
+set(MKL_LIBRARIES "$ENV{INTEL_ROOT}/mkl/lib/intel64/mkl_rt.lib")
+message(STATUS "Armadillo lib: ${MKL_LIBRARIES}")
+
+#set(OPENBLAS_LIBRARIES $ENV{OPENBLAS_ROOT}/lib/libopenblas.dll.a)
+#message(STATUS "OpenBLAS lib: ${OPENBLAS_LIBRARIES}")
 
 # find Eigen
 set(EIGEN_INCLUDE_DIRS $ENV{EIGEN_ROOT})
@@ -23,13 +26,13 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL
 endif ()
 
 if (WIN32 AND ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -D_HAS_EXCEPTIONS=0 -U__EXCEPTIONS -U_CPPUNWIND")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_HAS_EXCEPTIONS=0 -U__EXCEPTIONS -U_CPPUNWIND")
 endif ()
 
-include_directories(SYSTEM ${ARMADILLO_INCLUDE_DIRS} ${OPENBLAS_INCLUDE_DIRS} ${EIGEN_INCLUDE_DIRS})
+include_directories(SYSTEM ${ARMADILLO_INCLUDE_DIRS} ${EIGEN_INCLUDE_DIRS})
 
 add_executable(eigen-chol eigen-chol.cpp)
-target_link_libraries(eigen-chol ${OPENBLAS_LIBRARIES})
+target_link_libraries(eigen-chol ${OPENBLAS_LIBRARIES} ${MKL_LIBRARIES})
 if (NOT WIN32)
   target_link_libraries(eigen-chol gfortran pthread)
 endif ()

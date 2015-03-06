@@ -35,9 +35,19 @@ protected:
 
 	size_t mMatrixSize;
 	arma::mat mArmaMatrix;
+	arma::mat mArmaSymmetric;
+	arma::mat mArmaTriangular;
+	arma::mat mAnotherArma;
+	arma::mat mArmaUneven;
+	arma::vec mArmaVector;
 	arma::mat mXtXArma;
 
 	Eigen::MatrixXd mEigenMatrix;
+	Eigen::MatrixXd mEigenSymmetric;
+	Eigen::MatrixXd mEigenTriangular;
+	Eigen::MatrixXd mAnotherEigen;
+	Eigen::MatrixXd mEigenUneven;
+	Eigen::VectorXd mEigenVector;
 	Eigen::MatrixXd mXtXEigen;
 };
 
@@ -47,7 +57,13 @@ void MatrixTimingFixture::RandomizeMembers(size_t inMatrixSize, MatrixTimingFixt
 	{
 		case Arma:
 		{
-			mArmaMatrix = arma::mat(inMatrixSize, inMatrixSize, arma::fill::randn);
+			mArmaMatrix = arma::mat((arma::uword)inMatrixSize, (arma::uword)inMatrixSize, arma::fill::randn);
+			mAnotherArma = arma::mat((arma::uword)inMatrixSize, (arma::uword)inMatrixSize, arma::fill::randn);
+			mArmaVector = arma::vec((arma::uword)inMatrixSize, arma::fill::randn);
+			mArmaUneven = arma::mat((arma::uword)inMatrixSize, (arma::uword)inMatrixSize * 2, arma::fill::randn);
+
+			mArmaTriangular = arma::trimatu(arma::mat((arma::uword)inMatrixSize, (arma::uword)inMatrixSize, arma::fill::randn));
+			mArmaSymmetric = arma::symmatu(arma::mat((arma::uword)inMatrixSize, (arma::uword)inMatrixSize, arma::fill::randn));
 			mXtXArma = mArmaMatrix.t() * mArmaMatrix;
 			break;
 		}
@@ -55,6 +71,12 @@ void MatrixTimingFixture::RandomizeMembers(size_t inMatrixSize, MatrixTimingFixt
 		case Eigen:
 		{
 			mEigenMatrix = Eigen::MatrixXd::Random(inMatrixSize, inMatrixSize);
+			mAnotherEigen = Eigen::MatrixXd::Random(inMatrixSize, inMatrixSize);
+			mEigenVector = Eigen::VectorXd::Random(inMatrixSize);
+			mEigenUneven = Eigen::MatrixXd::Random(inMatrixSize, inMatrixSize * 2);
+
+			mEigenTriangular = Eigen::MatrixXd::Random(inMatrixSize, inMatrixSize);
+			mEigenSymmetric = Eigen::MatrixXd::Random(inMatrixSize, inMatrixSize);
 			mXtXEigen = mEigenMatrix.transpose() * mEigenMatrix;
 			break;
 		}
@@ -121,7 +143,7 @@ void MatrixTimingFixture::TimeMatrixSizes()
 			Eigen::LLT<Eigen::MatrixXd> chol(mXtXEigen);
 		});
 
-		/*TimeOp(iterations, matrixSize, "trinv", Arma, [&]() {
+		TimeOp(iterations, matrixSize, "trinv", Arma, [&]() {
 			arma::mat inverse = arma::inv(arma::trimatu(mArmaTriangular));
 		});
 
@@ -223,7 +245,7 @@ void MatrixTimingFixture::TimeMatrixSizes()
 
 		TimeOp(iterations, matrixSize, "syscale", Eigen, [&]() {
 			mEigenSymmetric *= 2;
-		});*/
+		});
 	}
 }
 
